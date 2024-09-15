@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Portfolio</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <!-- Updated Three.js to a more recent version for better support -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap");
+
+      :root {
+        --primary-color: #f5f5f5; /* Off-white for the shape */
+        --secondary-color: rgba(
+          255,
+          255,
+          255,
+          0.1
+        ); /* Semi-transparent white for glass effect */
+        --accent-color: #4a90e2; /* A nice blue accent color */
+        --text-color: #ffffff; /* White text */
+        --bg-color: #000000; /* Black background */
+      }
+
+      body {
+        font-family: "Source Code Pro", monospace;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+      }
+
+      header {
+        background-color: transparent;
+        color: var(--text-color);
+        text-align: center;
+        padding: 1rem 1.5rem; /* Reduced padding */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      nav ul {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+      }
+
+      nav ul li {
+        margin: 0 15px;
+      }
+
+      nav ul li a {
+        color: var(--text-color);
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s ease;
+      }
+
+      nav ul li a:hover {
+        color: var(--accent-color);
+      }
+
+      main {
+        padding: 3rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      section {
+        margin-bottom: 3rem;
+        background-color: var(--secondary-color);
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .project {
+        background-color: var(--secondary-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .project:hover {
+        transform: translateY(-5px);
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      input,
+      textarea {
+        margin-bottom: 1rem;
+        padding: 0.8rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--text-color);
+        border-color: var(--accent-color);
+      }
+
+      button {
+        background-color: var(--accent-color);
+        color: var(--text-color);
+        border: none;
+        padding: 0.8rem 1.5rem;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: var(--primary-color);
+        color: var(--bg-color);
+      }
+
+      footer {
+        background-color: var(--secondary-color);
+        color: var(--text-color);
+        text-align: center;
+        padding: 1rem;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+
+      @media (max-width: 768px) {
+        header {
+          padding: 1rem;
+        }
+
+        nav ul {
+          flex-direction: column;
+        }
+
+        nav ul li {
+          margin-bottom: 10px;
+        }
+
+        main {
+          padding: 1.5rem;
+        }
+      }
+
+      #animation-container {
+        width: 150px; /* Reduced width */
+        height: 150px; /* Reduced height */
+        margin: 0 auto 1rem; /* Added bottom margin */
+      }
+
+      h1 {
+        margin-top: 0; /* Remove top margin */
+        margin-bottom: 1rem; /* Add some space below the title */
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div id="animation-container"></div>
+      <h1 data-aos="fade-down">David's Portfolio</h1>
+      <nav>
+        <ul>
+          <li>
+            <a href="#about" data-aos="fade-right" data-aos-delay="100"
+              >About</a
+            >
+          </li>
+          <li>
+            <a href="#projects" data-aos="fade-right" data-aos-delay="200"
+              >Projects</a
+            >
+          </li>
+          <li>
+            <a href="#contact" data-aos="fade-right" data-aos-delay="300"
+              >Contact</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="about" data-aos="fade-up">
+        <h2>About Me</h2>
+        <p>
+          I'm a passionate web developer with a keen eye for design and a love
+          for creating engaging user experiences.
+        </p>
+      </section>
+
+      <section id="projects">
+        <h2 data-aos="fade-up">My Projects</h2>
+        <div class="project" data-aos="flip-left">
+          <h3>Project 1</h3>
+          <p>Description of Project 1</p>
+        </div>
+        <div class="project" data-aos="flip-right">
+          <h3>Project 2</h3>
+          <p>Description of Project 2</p>
+        </div>
+      </section>
+
+      <section id="contact" data-aos="zoom-in">
+        <h2>Contact Me</h2>
+        <form>
+          <input type="text" placeholder="Name" required />
+          <input type="email" placeholder="Email" required />
+          <textarea placeholder="Message" required></textarea>
+          <button type="submit">Send</button>
+        </form>
+      </section>
+    </main>
+
+    <footer data-aos="fade-up">
+      <p>&copy; 2023 My Portfolio. All rights reserved.</p>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 1000,
+        once: true,
+      });
+
+      // Three.js animation
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+      });
+      renderer.setSize(150, 150); /* Adjusted size to match container */
+      document
+        .getElementById("animation-container")
+        .appendChild(renderer.domElement);
+
+      // Create Sphere Geometry
+      const sphereGeometry = new THREE.SphereGeometry(1, 64, 64);
+
+      // Clone Sphere Geometry to create Cube Morph Target
+      const cubeGeometry = sphereGeometry.clone();
+
+      // Modify the cloned geometry to resemble a cube
+      const positionAttribute = cubeGeometry.attributes.position;
+      for (let i = 0; i < positionAttribute.count; i++) {
+        // Normalize each vertex to move it to the surface of a cube
+        const x = positionAttribute.getX(i);
+        const y = positionAttribute.getY(i);
+        const z = positionAttribute.getZ(i);
+        const max = Math.max(Math.abs(x), Math.abs(y), Math.abs(z));
+        positionAttribute.setXYZ(
+          i,
+          (x / max) * 1, // Scale to cube size (1)
+          (y / max) * 1,
+          (z / max) * 1
+        );
+      }
+
+      // Add the cube geometry as a morph target
+      sphereGeometry.morphAttributes.position = [];
+      sphereGeometry.morphAttributes.position[0] =
+        cubeGeometry.attributes.position;
+
+      // Create Material with morphTargets enabled
+      const material = new THREE.MeshPhongMaterial({
+        color: 0xf5f5f5, // Off-white color
+        shininess: 100,
+        morphTargets: true,
+      });
+
+      // Create Mesh with Sphere Geometry and Morph Target
+      const mesh = new THREE.Mesh(sphereGeometry, material);
+      scene.add(mesh);
+
+      // Add Lighting
+      const light = new THREE.DirectionalLight(0xffffff, 0.5); // Change to directional light
+      light.position.set(1, 1, 1);
+      scene.add(light);
+
+      // Add ambient light for better visibility
+      const ambientLight = new THREE.AmbientLight(0x404040);
+      scene.add(ambientLight);
+
+      camera.position.z = 5;
+
+      // Animation loop with rotation
+      function animate() {
+        requestAnimationFrame(animate);
+        // Rotate the mesh for added visual effect
+        mesh.rotation.x += 0.005;
+        mesh.rotation.y += 0.005;
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Animation timeline for morphing
+      const timeline = gsap.timeline({ repeat: -1, yoyo: true });
+      timeline.to(mesh.morphTargetInfluences, {
+        0: 1, // Morph to cube
+        duration: 2,
+        ease: "power1.inOut",
+      });
+      timeline.to(mesh.morphTargetInfluences, {
+        0: 0, // Morph back to sphere
+        duration: 2,
+        ease: "power1.inOut",
+      });
+    </script>
+  </body>
+</html>
