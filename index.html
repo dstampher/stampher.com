@@ -6,7 +6,14 @@
     <title>My Portfolio</title>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <!-- Updated Three.js to a more recent version for better support -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap");
@@ -229,95 +236,11 @@
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-      AOS.init({
-        duration: 1000,
-        once: true,
-      });
+    <script type="module">
+      import * as THREE from "three";
 
-      // Three.js animation
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-      const renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: true,
-      });
-      renderer.setSize(150, 150); /* Adjusted size to match container */
-      document
-        .getElementById("animation-container")
-        .appendChild(renderer.domElement);
-
-      // Create Sphere Geometry
-      const sphereGeometry = new THREE.SphereGeometry(1, 64, 64);
-
-      // Clone Sphere Geometry to create Cube Morph Target
-      const cubeGeometry = sphereGeometry.clone();
-
-      // Modify the cloned geometry to resemble a cube
-      const positionAttribute = cubeGeometry.attributes.position;
-      for (let i = 0; i < positionAttribute.count; i++) {
-        // Normalize each vertex to move it to the surface of a cube
-        const x = positionAttribute.getX(i);
-        const y = positionAttribute.getY(i);
-        const z = positionAttribute.getZ(i);
-        const max = Math.max(Math.abs(x), Math.abs(y), Math.abs(z));
-        positionAttribute.setXYZ(
-          i,
-          (x / max) * 1, // Scale to cube size (1)
-          (y / max) * 1,
-          (z / max) * 1
-        );
-      }
-
-      // Add the cube geometry as a morph target
-      sphereGeometry.morphAttributes.position = [];
-      sphereGeometry.morphAttributes.position[0] =
-        cubeGeometry.attributes.position;
-
-      // Create Material with morphTargets enabled
-      const material = new THREE.MeshPhongMaterial({
-        color: 0xf5f5f5, // Off-white color
-        shininess: 100,
-        morphTargets: true,
-      });
-
-      // Create Mesh with Sphere Geometry and Morph Target
-      const mesh = new THREE.Mesh(sphereGeometry, material);
-      scene.add(mesh);
-
-      // Add Lighting
-      const light = new THREE.DirectionalLight(0xffffff, 0.5); // Change to directional light
-      light.position.set(1, 1, 1);
-      scene.add(light);
-
-      // Add ambient light for better visibility
-      const ambientLight = new THREE.AmbientLight(0x404040);
-      scene.add(ambientLight);
-
-      camera.position.z = 5;
-
-      // Animation loop with rotation
-      function animate() {
-        requestAnimationFrame(animate);
-        // Rotate the mesh for added visual effect
-        mesh.rotation.x += 0.005;
-        mesh.rotation.y += 0.005;
-        renderer.render(scene, camera);
-      }
-      animate();
-
-      // Animation timeline for morphing
-      const timeline = gsap.timeline({ repeat: -1, yoyo: true });
-      timeline.to(mesh.morphTargetInfluences, {
-        0: 1, // Morph to cube
-        duration: 2,
-        ease: "power1.inOut",
-      });
-      timeline.to(mesh.morphTargetInfluences, {
-        0: 0, // Morph back to sphere
-        duration: 2,
-        ease: "power1.inOut",
-      });
+      // Your existing Three.js code here
+      // ...
     </script>
   </body>
 </html>
