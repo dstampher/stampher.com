@@ -240,12 +240,26 @@
 
       window.addEventListener("load", () => {
         try {
+          // Check for WebGL support
+          if (!THREE.WEBGL.isWebGLAvailable()) {
+            throw new Error("WebGL is not supported in your browser");
+          }
+
           const scene = new THREE.Scene();
           const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-          const renderer = new THREE.WebGLRenderer({
-            antialias: true,
-            alpha: true,
-          });
+
+          // Create renderer with error handling
+          let renderer;
+          try {
+            renderer = new THREE.WebGLRenderer({
+              antialias: true,
+              alpha: true,
+            });
+          } catch (e) {
+            console.error("Error creating WebGLRenderer:", e);
+            throw new Error("Failed to create WebGL context");
+          }
+
           renderer.setSize(150, 150);
           const container = document.getElementById("animation-container");
           if (!container) {
@@ -309,7 +323,7 @@
           }
           animate();
 
-          // Animation timeline for morphing using an intermediary object
+          // GSAP animation
           const morph = { influence: 0 };
           const timeline = gsap.timeline({ repeat: -1, yoyo: true });
           timeline.to(morph, {
@@ -340,6 +354,12 @@
           });
         } catch (error) {
           console.error("Error initializing Three.js:", error);
+          // Display a user-friendly error message on the page
+          const container = document.getElementById("animation-container");
+          if (container) {
+            container.innerHTML =
+              "<p>Sorry, we couldn't load the 3D animation. Please try a different browser or device.</p>";
+          }
         }
       });
     </script>
