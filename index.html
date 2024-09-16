@@ -5,8 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Portfolio</title>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-    <!-- Updated Three.js to the latest version without integrity attributes -->
-    <script src="https://unpkg.com/three@0.150.1/build/three.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap");
@@ -229,13 +235,9 @@
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-      AOS.init({
-        duration: 1000,
-        once: true,
-      });
+    <script type="module">
+      import * as THREE from "three";
 
-      // Three.js animation
       window.addEventListener("load", () => {
         try {
           const scene = new THREE.Scene();
@@ -277,9 +279,6 @@
           sphereGeometry.morphAttributes.position[0] =
             cubeGeometry.attributes.position;
 
-          // Optionally, set morph target names
-          sphereGeometry.morphTargetDictionary = { cube: 0 };
-
           // Create Material with morphTargets enabled
           const material = new THREE.MeshPhongMaterial({
             color: 0xf5f5f5,
@@ -290,9 +289,6 @@
           // Create Mesh with Sphere Geometry and Morph Target
           const mesh = new THREE.Mesh(sphereGeometry, material);
           scene.add(mesh);
-
-          // Debugging Log
-          console.log("MorphTargetInfluences:", mesh.morphTargetInfluences);
 
           // Add Lighting
           const light = new THREE.DirectionalLight(0xffffff, 0.5);
@@ -326,8 +322,6 @@
                 mesh.morphTargetInfluences[0] !== undefined
               ) {
                 mesh.morphTargetInfluences[0] = morph.influence;
-              } else {
-                console.warn("morphTargetInfluences not defined");
               }
             },
           });
@@ -341,8 +335,6 @@
                 mesh.morphTargetInfluences[0] !== undefined
               ) {
                 mesh.morphTargetInfluences[0] = morph.influence;
-              } else {
-                console.warn("morphTargetInfluences not defined");
               }
             },
           });
