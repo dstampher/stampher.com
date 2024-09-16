@@ -311,17 +311,24 @@
           }
           animate();
 
-          // Animation timeline for morphing
+          // Animation timeline for morphing using an intermediary object
+          const morph = { influence: 0 };
           const timeline = gsap.timeline({ repeat: -1, yoyo: true });
-          timeline.to(mesh.morphTargetInfluences, {
-            0: 1,
+          timeline.to(morph, {
+            influence: 1,
             duration: 2,
             ease: "power1.inOut",
+            onUpdate: () => {
+              mesh.morphTargetInfluences[0] = morph.influence;
+            },
           });
-          timeline.to(mesh.morphTargetInfluences, {
-            0: 0,
+          timeline.to(morph, {
+            influence: 0,
             duration: 2,
             ease: "power1.inOut",
+            onUpdate: () => {
+              mesh.morphTargetInfluences[0] = morph.influence;
+            },
           });
         } catch (error) {
           console.error("Error initializing Three.js:", error);
