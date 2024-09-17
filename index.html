@@ -251,12 +251,24 @@
 
         const scene = new THREE.Scene();
 
+        // Increased subdivisions for smooth morphing
         const boxWidth = 1;
         const boxHeight = 1;
         const boxDepth = 1;
-        const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+        const segments = 20; // Number of subdivisions
+        const geometry = new THREE.BoxGeometry(
+          boxWidth,
+          boxHeight,
+          boxDepth,
+          segments,
+          segments,
+          segments
+        );
 
-        const material = new THREE.MeshPhongMaterial({ color: 0x44aa88 });
+        const material = new THREE.MeshPhongMaterial({
+          color: 0x44aa88,
+          shininess: 100, // Added shininess for better lighting effect
+        });
 
         const cube = new THREE.Mesh(geometry, material);
         scene.add(cube);
@@ -266,6 +278,61 @@
         const light = new THREE.DirectionalLight(color, intensity);
         light.position.set(-1, 2, 4);
         scene.add(light);
+
+        // Store original cube positions
+        const positionAttribute = geometry.attributes.position;
+        const vertexCount = positionAttribute.count;
+        const cubePositions = new Float32Array(positionAttribute.array); // Clone the original positions
+
+        // Calculate sphere positions based on cube vertices
+        const spherePositions = new Float32Array(
+          positionAttribute.array.length
+        );
+        for (let i = 0; i < vertexCount; i++) {
+          const x = cubePositions[i * 3];
+          const y = cubePositions[i * 3 + 1];
+          const z = cubePositions[i * 3 + 2];
+          const vec = new THREE.Vector3(x, y, z)
+            .normalize()
+            .multiplyScalar(0.7); // Adjust scalar for desired sphere size
+          spherePositions[i * 3] = vec.x;
+          spherePositions[i * 3 + 1] = vec.y;
+          spherePositions[i * 3 + 2] = vec.z;
+        }
+
+        // Morph parameter
+        let morph = { value: 0 };
+
+        // GSAP animation for morphing between cube and sphere
+        gsap.to(morph, {
+          value: 1,
+          duration: 3, // Duration for one morph cycle
+          yoyo: true,
+          repeat: -1, // Infinite loop
+          ease: "power1.inOut",
+          onUpdate: () => {
+            for (let i = 0; i < vertexCount; i++) {
+              // Linear interpolation between cube and sphere positions
+              positionAttribute.array[i * 3] = THREE.MathUtils.lerp(
+                cubePositions[i * 3],
+                spherePositions[i * 3],
+                morph.value
+              );
+              positionAttribute.array[i * 3 + 1] = THREE.MathUtils.lerp(
+                cubePositions[i * 3 + 1],
+                spherePositions[i * 3 + 1],
+                morph.value
+              );
+              positionAttribute.array[i * 3 + 2] = THREE.MathUtils.lerp(
+                cubePositions[i * 3 + 2],
+                spherePositions[i * 3 + 2],
+                morph.value
+              );
+            }
+            positionAttribute.needsUpdate = true; // Inform Three.js that positions have been updated
+            geometry.computeVertexNormals(); // Recompute normals for proper lighting
+          },
+        });
 
         function resizeRendererToDisplaySize(renderer) {
           const canvas = renderer.domElement;
@@ -279,7 +346,7 @@
         }
 
         function render(time) {
-          time *= 0.001;
+          time *= 0.001; // Convert to seconds
 
           if (resizeRendererToDisplaySize(renderer)) {
             const canvas = renderer.domElement;
@@ -287,8 +354,9 @@
             camera.updateProjectionMatrix();
           }
 
-          cube.rotation.x = time;
-          cube.rotation.y = time;
+          // Continuous rotation for a hypnotic effect
+          cube.rotation.x += 0.005;
+          cube.rotation.y += 0.005;
 
           renderer.render(scene, camera);
 
